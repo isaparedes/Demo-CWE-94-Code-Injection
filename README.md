@@ -56,7 +56,7 @@ Los siguientes casos deben realizarse utilizando la versión vulnerable (`Vulner
 1. En el campo **Usuario**, ingresar:
 
 ```text
-x') or True or ('x
+') or True or ('
 ```
 
 2. En el campo **Contraseña** ingresar cualquier valor o no ingresar nada.
