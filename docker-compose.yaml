@@ -1,0 +1,12 @@
+services:
+  vulnerable:
+    build: .
+    command: python VulnerableLogin.py
+    ports:
+      - "5000:5000"
+
+  fixed:
+    build: .
+    command: python FixedLogin.py
+    ports:
+      - "5001:5001"
