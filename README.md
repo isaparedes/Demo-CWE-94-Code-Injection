@@ -212,6 +212,12 @@ authenticated = users.get(username) == password
 
 Los datos introducidos por el usuario se tratan como datos y no como código ejecutable.
 
-Por lo tanto, las entradas utilizadas en las pruebas de la versión vulnerable no permiten modificar la lógica de autenticación en la versión corregida. 
+Por lo tanto, las entradas utilizadas en las pruebas de la versión vulnerable no permiten modificar la lógica de autenticación en la versión corregida.
 
 Esta versión es segura frente a vulnerabilidades de Code Injection (CWE-94).
+
+### Fuentes
+
+1. CWE - CWE-94: Improper control of Generation of Code ('Code Injection’) (4.20). (n.d.). https://cwe.mitre.org/data/definitions/94.html
+
+2. Documentación de Flask. https://flask.palletsprojects.com/en/stable/
