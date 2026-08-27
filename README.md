@@ -216,7 +216,7 @@ Por lo tanto, las entradas utilizadas en las pruebas de la versión vulnerable n
 
 Esta versión es segura frente a vulnerabilidades de Code Injection (CWE-94).
 
-### Fuentes
+## Fuentes
 
 1. CWE - CWE-94: Improper control of Generation of Code ('Code Injection’) (4.20). (n.d.). https://cwe.mitre.org/data/definitions/94.html
 
