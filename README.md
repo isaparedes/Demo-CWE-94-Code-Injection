@@ -196,6 +196,8 @@ Esta versión es segura frente a vulnerabilidades de Code Injection (CWE-94).
 
 ## Fuentes
 
-1. CWE - CWE-94: Improper control of Generation of Code ('Code Injection’) (4.20). (n.d.). https://cwe.mitre.org/data/definitions/94.html
+CWE - CWE-94: Improper control of Generation of Code ('Code Injection’) (4.20). (n.d.). https://cwe.mitre.org/data/definitions/94.html
 
-2. Documentación de Flask. https://flask.palletsprojects.com/en/stable/
+CWE - CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection') (4.20). (n.d.). https://cwe.mitre.org/data/definitions/95.html 
+
+Welcome to Flask — Flask Documentation (3.1.x). (n.d.). https://flask.palletsprojects.com/en/stable/ 
