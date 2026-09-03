@@ -1,14 +1,37 @@
 {% extends "base.html" %}
-{% block title %}Panel principal{% endblock %}
+{% block title %}Portal de Empleados{% endblock %}
 {% block card_class %}card--wide{% endblock %}
 {% block content %}
-  <h1>Bienvenido, {{ username }}</h1>
-  <p class="subtitle">Este es tu panel principal.</p>
+
+  <h1 style="text-transform: capitalize;">Hola, {{ username }}</h1>
+  <p class="subtitle">Bienvenido al Portal de Empleados.</p>
+
+  <ul class="panel-list">
+    <li>
+      <span class="label">Departamento</span>
+      <span class="value">Desarrollo</span>
+    </li>
+
+    <li>
+      <span class="label">Proyectos asignados</span>
+      <span class="value">3</span>
+    </li>
+
+    <li>
+      <span class="label">Tareas pendientes</span>
+      <span class="value">5</span>
+    </li>
+
+    <li>
+      <span class="label">Estado de cuenta</span>
+      <span class="value">Activo</span>
+    </li>
+  </ul>
 
   <div class="actions">
-    {% if username == 'admin' %}
-      <a href="{{ url_for('admin') }}" class="btn-secondary">Panel de administración</a>
-    {% endif %}
-    <a href="{{ url_for('logout') }}" class="btn-secondary">Cerrar sesión</a>
+    <a href="{{ url_for('logout') }}" class="btn-secondary">
+      Cerrar sesión
+    </a>
   </div>
+
 {% endblock %}
