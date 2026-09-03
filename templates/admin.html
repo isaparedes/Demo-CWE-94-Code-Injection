@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Panel de administración{% endblock %}
+{% block card_class %}card--wide{% endblock %}
+{% block content %}
+  <h1>Panel de administración</h1>
+  <p class="subtitle">Bienvenido, administrador.</p>
+
+  <ul class="panel-list">
+    <li><span class="label">Usuarios registrados</span><span class="value">2</span></li>
+    <li><span class="label">Pedidos pendientes</span><span class="value">8</span></li>
+    <li><span class="label">Productos disponibles</span><span class="value">24</span></li>
+    <li><span class="label">Estado del sistema</span><span class="value">Operativo</span></li>
+  </ul>
+
+  <div class="actions">
+    <a href="{{ url_for('dashboard') }}" class="btn-secondary">Volver al dashboard</a>
+    <a href="{{ url_for('logout') }}" class="btn-secondary">Cerrar sesión</a>
+  </div>
+{% endblock %}

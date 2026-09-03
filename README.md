@@ -83,7 +83,7 @@ juan
 
 3. Presionar **Ingresar**.
 
-4. Se puede observar que la aplicación permite iniciar sesión como `juan` sin conocer su contraseña real (`juan1234`).
+4. Se puede observar que la aplicación permite iniciar sesión como `juan` sin conocer su contraseña real (`juan1234`), y redirige a `/dashboard`, una página que solo debería ser accesible con una sesión autenticada.
 
 La entrada introducida en el campo de contraseña modifica la expresión que genera la aplicación y hace que `eval()` la evalúe como verdadera.
 
@@ -181,6 +181,10 @@ admin
 3. Presionar **Ingresar**.
 
 4. La aplicación permite el acceso y redirige al **Panel de administración**.
+
+### Cerrar sesión
+
+Desde el dashboard o desde el panel de administración se puede acceder a `/logout` para cerrar la sesión activa y volver al login.
 
 ## Comparación entre ambas versiones
 

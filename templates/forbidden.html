@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Acceso denegado{% endblock %}
+{% block content %}
+  <h1>403 · Acceso denegado</h1>
+  <p class="subtitle">Esta página es solo para administradores.</p>
+  <div class="actions">
+    <a href="{{ url_for('index') }}" class="btn-secondary">Volver al login</a>
+  </div>
+{% endblock %}

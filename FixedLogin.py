@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template_string, redirect, url_for, session
+from flask import Flask, request, render_template, redirect, url_for, session
 
 app = Flask(__name__)
 
@@ -9,156 +9,14 @@ users = {
     "juan": "juan1234",
 }
 
-TEMPLATE = """
-<!doctype html>
-<html>
-<head>
-  <title>Login (SEGURO)</title>
-  <style>
-    body {
-      font-family: monospace;
-      background: #1a1a1a;
-      color: #e0e0e0;
-      padding: 2rem;
-    }
-
-    h1 {
-      color: #55ff88;
-    }
-
-    input {
-      padding: 0.5rem;
-      width: 320px;
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-
-    button {
-      padding: 0.5rem 1rem;
-    }
-
-    pre {
-      background: #000;
-      padding: 1rem;
-      border: 1px solid #444;
-      white-space: pre-wrap;
-      word-break: break-all;
-    }
-
-    .badge {
-      background: #55ff88;
-      color: #000;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 0.8rem;
-    }
-
-    .ok {
-      color: #55ff88;
-    }
-
-    .fail {
-      color: #ff5555;
-    }
-  </style>
-</head>
-
-<body>
-
-  <h1>🟢 Login <span class="badge">SEGURO</span></h1>
-
-  <form method="POST">
-    <input name="username" placeholder="usuario" autofocus />
-    <input name="password" placeholder="contraseña" type="text" />
-    <button type="submit">Ingresar</button>
-  </form>
-
-  {% if result %}
-    <p class="{{ 'ok' if success else 'fail' }}">{{ result }}</p>
-  {% endif %}
-
-  <p>Comparación utilizada:</p>
-
-  <pre>users.get(username) == password</pre>
-
-</body>
-</html>
-"""
-
-
-ADMIN_TEMPLATE = """
-<!doctype html>
-<html>
-<head>
-  <title>Panel de administración</title>
-
-  <style>
-    body {
-      font-family: monospace;
-      background: #1a1a1a;
-      color: #e0e0e0;
-      padding: 2rem;
-    }
-
-    h1 {
-      color: #55ff88;
-    }
-
-    .panel {
-      background: #222;
-      border: 1px solid #444;
-      padding: 1.5rem;
-      max-width: 600px;
-    }
-
-    .item {
-      padding: 0.8rem;
-      border-bottom: 1px solid #444;
-    }
-
-    a {
-      color: #55aaff;
-    }
-  </style>
-</head>
-
-<body>
-
-  <h1>Panel de administración</h1>
-
-  <div class="panel">
-
-    <p><strong>Bienvenido, administrador.</strong></p>
-
-    <div class="item">
-      Usuarios registrados: 2
-    </div>
-
-    <div class="item">
-      Pedidos pendientes: 8
-    </div>
-
-    <div class="item">
-      Productos disponibles: 24
-    </div>
-
-    <div class="item">
-      Estado del sistema: Operativo
-    </div>
-
-  </div>
-
-  <br>
-
-  <a href="/">← Volver al login</a>
-
-</body>
-</html>
-"""
-
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+
+    if request.method == "GET" and "username" in session:
+        if session["username"] == "admin":
+            return redirect(url_for("admin"))
+        return redirect(url_for("dashboard"))
 
     result = None
     success = False
@@ -182,15 +40,29 @@ def index():
             if username == "admin":
                 return redirect(url_for("admin"))
 
-            result = f"Acceso concedido. Bienvenido, {username}"
+            return redirect(url_for("dashboard"))
 
         else:
             result = "Usuario o contraseña incorrectos"
 
-    return render_template_string(
-        TEMPLATE,
+    return render_template(
+        "login.html",
+        theme="fixed",
         result=result,
-        success=success
+        success=success,
+    )
+
+
+@app.route("/dashboard")
+def dashboard():
+
+    if "username" not in session:
+        return redirect(url_for("index"))
+
+    return render_template(
+        "dashboard.html",
+        theme="fixed",
+        username=session["username"],
     )
 
 
@@ -198,14 +70,15 @@ def index():
 def admin():
 
     if session.get("username") != "admin":
+        return render_template("forbidden.html", theme="fixed"), 403
 
-        return """
-        <h1>403 - Acceso denegado</h1>
-        <p>Esta página es solo para administradores.</p>
-        <a href="/">← Volver al login</a>
-        """, 403
+    return render_template("admin.html", theme="fixed")
 
-    return render_template_string(ADMIN_TEMPLATE)
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("index"))
 
 
 if __name__ == "__main__":

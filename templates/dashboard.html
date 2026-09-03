@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Panel principal{% endblock %}
+{% block card_class %}card--wide{% endblock %}
+{% block content %}
+  <h1>Bienvenido, {{ username }}</h1>
+  <p class="subtitle">Este es tu panel principal.</p>
+
+  <div class="actions">
+    {% if username == 'admin' %}
+      <a href="{{ url_for('admin') }}" class="btn-secondary">Panel de administración</a>
+    {% endif %}
+    <a href="{{ url_for('logout') }}" class="btn-secondary">Cerrar sesión</a>
+  </div>
+{% endblock %}
