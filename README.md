@@ -51,23 +51,7 @@ Los siguientes casos deben realizarse utilizando la versión vulnerable (`Vulner
 
 1. Abrir `http://127.0.0.1:5000/` en el navegador.
 
-### Vulnerabilidad 1 - Iniciar sesión como usuario sin ninguna credencial
-
-1. En el campo **Usuario**, ingresar:
-
-```text
-') or True or ('
-```
-
-2. En el campo **Contraseña** ingresar cualquier valor o no ingresar nada.
-
-3. Presionar **Ingresar**.
-
-4. Se puede observar que la aplicación permite iniciar sesión sin proporcionar un usuario y una contraseña válidos.
-
-Esto ocurre porque los datos ingresados por el usuario se incorporan directamente a una expresión de Python que posteriormente es ejecutada mediante `eval()`.
-
-### Vulnerabilidad 2 - Iniciar sesión como Juan sin conocer su contraseña
+### Vulnerabilidad 1 - Iniciar sesión como Juan sin conocer su contraseña
 
 1. En el campo **Usuario** ingresar:
 
@@ -87,7 +71,7 @@ juan
 
 La entrada introducida en el campo de contraseña modifica la expresión que genera la aplicación y hace que `eval()` la evalúe como verdadera.
 
-### Vulnerabilidad 3 - Iniciar sesión como administrador sin conocer su contraseña
+### Vulnerabilidad 2 - Iniciar sesión como administrador sin conocer su contraseña
 
 1. En el campo **Usuario**, ingresar:
 
@@ -130,8 +114,8 @@ python FixedLogin.py
 1. Repetir la **Vulnerabilidad 1** utilizando:
 
 ```text
-Usuario: x') or True or ('x
-Contraseña: cualquier valor (o vacío)
+Usuario: juan
+Contraseña: ' or True or '
 ```
 
 2. La aplicación debe rechazar las credenciales y mostrar:
@@ -140,27 +124,14 @@ Contraseña: cualquier valor (o vacío)
 Usuario o contraseña incorrectos
 ```
 
-3. Repetir la **Vulnerabilidad 2** utilizando:
-
-```text
-Usuario: juan
-Contraseña: ' or True or '
-```
-
-4. La aplicación debe rechazar las credenciales y mostrar:
-
-```text
-Usuario o contraseña incorrectos
-```
-
-5. Repetir la **Vulnerabilidad 3** utilizando:
+1. Repetir la **Vulnerabilidad 2** utilizando:
 
 ```text
 Usuario: admin
 Contraseña: ' or True or '
 ```
 
-6. La aplicación debe rechazar las credenciales y no permitir el acceso al panel de administración.
+2. La aplicación debe rechazar las credenciales y no permitir el acceso al panel de administración.
 
 ### Inicio de sesión válido
 
@@ -195,7 +166,7 @@ La diferencia entre ambas versiones se encuentra en la forma en que se procesan 
 La aplicación construye una expresión de Python utilizando los datos introducidos por el usuario:
 
 ```python
-condition = f"users.get('{username}') == '{password}'"
+condition = f"expected_password == '{password}'"
 ```
 
 Luego esta expresión se ejecuta mediante:
@@ -211,7 +182,10 @@ Esto permite que los datos introducidos por el usuario puedan modificar el códi
 La aplicación realiza una comparación directa entre el usuario y la contraseña:
 
 ```python
-authenticated = users.get(username) == password
+authenticated = (
+    username in users
+    and users[username]["password"] == password
+)
 ```
 
 Los datos introducidos por el usuario se tratan como datos y no como código ejecutable.
