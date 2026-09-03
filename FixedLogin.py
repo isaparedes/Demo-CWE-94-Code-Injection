@@ -5,8 +5,14 @@ app = Flask(__name__)
 app.secret_key = "clave-demo-cwe94"
 
 users = {
-    "admin": "1234",
-    "juan": "juan1234",
+    "admin": {
+        "password": "1234",
+        "role": "admin"
+    },
+    "juan": {
+        "password": "juan1234",
+        "role": "user"
+    },
 }
 
 
@@ -14,8 +20,9 @@ users = {
 def index():
 
     if request.method == "GET" and "username" in session:
-        if session["username"] == "admin":
+        if session["role"] == "admin":
             return redirect(url_for("admin"))
+
         return redirect(url_for("dashboard"))
 
     result = None
@@ -26,18 +33,20 @@ def index():
         username = request.form.get("username", "")
         password = request.form.get("password", "")
 
-        # FIX CWE-94:
-        # Los datos del usuario se utilizan directamente
-        # como datos y nunca se convierten en código.
-
-        authenticated = users.get(username) == password
+        # SOLUCIÓN A CWE-94: Evitar el uso de eval() y realizar la comparación de manera segura.
+        authenticated = (
+            username in users
+            and users[username]["password"] == password
+        )
 
         if authenticated:
 
             success = True
-            session["username"] = username
 
-            if username == "admin":
+            session["username"] = username
+            session["role"] = users[username]["role"]
+
+            if session["role"] == "admin":
                 return redirect(url_for("admin"))
 
             return redirect(url_for("dashboard"))
@@ -59,27 +68,71 @@ def dashboard():
     if "username" not in session:
         return redirect(url_for("index"))
 
+    # Los mismos datos ficticios que utiliza la versión vulnerable.
+
+    projects = [
+        {
+            "name": "Sistema de Gestión",
+            "status": "En progreso",
+            "progress": 75
+        },
+        {
+            "name": "Aplicación Web",
+            "status": "En revisión",
+            "progress": 45
+        },
+        {
+            "name": "API Backend",
+            "status": "Completado",
+            "progress": 100
+        }
+    ]
+
+    tasks = [
+        "Revisar documentación del proyecto",
+        "Actualizar requisitos",
+        "Verificar cambios pendientes"
+    ]
+
     return render_template(
         "dashboard.html",
         theme="fixed",
         username=session["username"],
+        role=session["role"],
+        projects=projects,
+        tasks=tasks
     )
 
 
 @app.route("/admin")
 def admin():
 
-    if session.get("username") != "admin":
-        return render_template("forbidden.html", theme="fixed"), 403
+    if "username" not in session:
+        return redirect(url_for("index"))
 
-    return render_template("admin.html", theme="fixed")
+    if session.get("role") != "admin":
+        return render_template(
+            "forbidden.html",
+            theme="fixed"
+        ), 403
+
+    return render_template(
+        "admin.html",
+        theme="fixed"
+    )
 
 
 @app.route("/logout")
 def logout():
+
     session.clear()
+
     return redirect(url_for("index"))
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True, port=5001)
+    app.run(
+        host="0.0.0.0",
+        debug=True,
+        port=5001
+    )
